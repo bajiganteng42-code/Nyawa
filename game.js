@@ -29,3 +29,62 @@ const foodItem = {
   y: 120,
   size: 15
 };
+function drawPlayer() {
+  ctx.fillStyle = "blue";
+  ctx.fillRect(player.x, player.y, player.size, player.size);
+}
+
+function drawFood() {
+  ctx.fillStyle = "red";
+  ctx.beginPath();
+  ctx.arc(
+    foodItem.x + foodItem.size / 2,
+    foodItem.y + foodItem.size / 2,
+    foodItem.size / 2,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
+}
+
+function checkFood() {
+  if (
+    player.x < foodItem.x + foodItem.size &&
+    player.x + player.size > foodItem.x &&
+    player.y < foodItem.y + foodItem.size &&
+    player.y + player.size > foodItem.y
+  ) {
+    food = Math.min(100, food + 20);
+
+    foodItem.x = Math.random() * (canvas.width - 20);
+    foodItem.y = Math.random() * (canvas.height - 20);
+  }
+}
+
+setInterval(() => {
+  food--;
+
+  if (food <= 0) {
+    food = 0;
+    hp--;
+  }
+
+  hpText.textContent = hp;
+  foodText.textContent = food;
+
+  if (hp <= 0) {
+    alert("Game Over!");
+    location.reload();
+  }
+}, 1000);
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  drawFood();
+  drawPlayer();
+  checkFood();
+
+  requestAnimationFrame(draw);
+}
+
+draw();
